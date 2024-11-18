@@ -19,5 +19,6 @@ public class BaseModel {
     private long id;
     private Date createdAt;
     private Date lastModifiedAt;
+    private Boolean deleted;
 
 }
