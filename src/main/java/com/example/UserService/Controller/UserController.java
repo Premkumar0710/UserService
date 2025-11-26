@@ -4,6 +4,9 @@ import com.example.UserService.Dtos.LoginRequestDto;
 import com.example.UserService.Dtos.SignUpRequestDto;
 import com.example.UserService.Dtos.TokenDto;
 import com.example.UserService.Dtos.UserDto;
+import com.example.UserService.Exceptions.InvalidTokenException;
+import com.example.UserService.Exceptions.PasswordMismacthException;
+import com.example.UserService.Model.Token;
 import com.example.UserService.Model.User;
 import com.example.UserService.Service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -30,15 +33,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    // Here after validating i/p in db we need to create new token; so we used postmapping here.
+    // Here after validating i/p in db we need to create new token; so we used post mapping here.
     // we should not return entire token object as it will expose user details which is present inside.
-    public TokenDto login(@RequestBody LoginRequestDto requestDto){
-        return null;
+    public TokenDto login(@RequestBody LoginRequestDto requestDto) throws PasswordMismacthException {
+       Token token = userService.login(requestDto.getEmail(), requestDto.getPassword());
+       return TokenDto.from(token);
     }
 
     @GetMapping("/validate/{tokenValue}")
-    public UserDto validateToken(@PathVariable("tokenValue") String tokenValue){
-        return null;
+    public UserDto validateToken(@PathVariable("tokenValue") String tokenValue) throws InvalidTokenException {
+        User user = userService.validateToken(tokenValue);
+        return UserDto.fromUser(user);
     }
 
     // to-do
